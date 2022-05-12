@@ -1189,7 +1189,8 @@ class SSHTunnelForwarder(object):
         if isinstance(_socket, socket.socket):
             _socket.settimeout(SSH_TIMEOUT)
             _socket.connect((self.ssh_host, self.ssh_port))
-        transport = paramiko.Transport(_socket)
+        transport = paramiko.Transport(_socket,
+                                       disabled_algorithms=dict(pubkeys=['rsa-sha2-256', 'rsa-sha2-512']))
         sock = transport.sock
         if isinstance(sock, socket.socket):
             sock.settimeout(SSH_TIMEOUT)
@@ -1403,8 +1404,7 @@ class SSHTunnelForwarder(object):
                 self._transport = self._get_transport()
                 self._transport.connect(hostkey=self.ssh_host_key,
                                         username=self.ssh_username,
-                                        pkey=key,
-                                        disabled_algorithms=dict(pubkeys=['rsa-sha2-256', 'rsa-sha2-512']))
+                                        pkey=key)
                 if self._transport.is_alive:
                     return
             except paramiko.AuthenticationException:
