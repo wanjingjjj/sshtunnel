@@ -1403,7 +1403,8 @@ class SSHTunnelForwarder(object):
                 self._transport = self._get_transport()
                 self._transport.connect(hostkey=self.ssh_host_key,
                                         username=self.ssh_username,
-                                        pkey=key)
+                                        pkey=key,
+                                        disabled_algorithms=dict(pubkeys=['rsa-sha2-256', 'rsa-sha2-512']))
                 if self._transport.is_alive:
                     return
             except paramiko.AuthenticationException:
